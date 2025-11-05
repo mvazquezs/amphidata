@@ -1,0 +1,39 @@
+---
+title: 'Dashboard: My first prototipe'
+format: dashboard
+---
+
+```{r}
+library(devtools)
+load_all('~/git/amphidata/')
+
+amphi_load_packages(
+  update_packages = FALSE)
+
+df_g <- load_dimensions_golvin(
+    filtrar_provincia = NULL,
+    filtrar_pais = NULL,
+    seleccionar_columnes = NULL,
+    format_llarg = FALSE)
+    
+```
+
+```{r}
+#| title: Highway vs. city mileage 
+(
+  ggplot(
+  mpg,
+  aes(x = cty, y = hwy)) +
+  geom_point()
+)
+```
+
+```{r}
+#| title: Drive types
+(
+ggplot(
+  mpg,
+  aes(x = drv)) +
+  geom_bar()
+)
+```

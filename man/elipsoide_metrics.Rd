@@ -11,7 +11,7 @@ elipsoide_metrics(
   minor_a,
   minor_b,
   semieix = TRUE,
-  tipus_perimetre = c("simple", "quadratica"),
+  tipus_perimetre = c("simple", "quadratica", "ramanujan_i", "ramanujan_ii"),
   tipus_area = "Area_A",
   focus_major = FALSE,
   focus_minor = FALSE

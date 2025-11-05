@@ -13,6 +13,7 @@
 #' @param filtrar_pais Lògic. Accepta noms de païssos moderns en anglès.
 #' @param seleccionar_columnes Selecciona les columnes desitjades per la sortida del dataframe.
 #' @param format_llarg Lògic. Si és TRUE, el dataframe de sortida es retorna en format llarg (pivotat).
+#' @param etiquetes. Lògic. Si és TRUE, el dataframe de sortida conté columnes etiqueta.
 #' 
 #' @return Un `tibble` amb les dades fusionades i estructurades.
 #'
@@ -21,7 +22,9 @@
 #' @import rlang
 #' @importFrom magrittr %>%
 #' @importFrom purrr map
-#' @importFrom tidyr pivot_longer
+#' @importFrom tidyr pivot_longer separate
+#' @importFrom stringr str_to_title str_replace str_replace_all
+#' @importFrom countrycode countrycode
 #' @importFrom crayon bold blue
 #' @seealso \code{\link[dplyr]{mutate}}
 #' @seealso \code{\link[tidyr]{pivot_longer}}
@@ -55,7 +58,8 @@ load_dimensions_golvin <- function(
   filtrar_provincia = NULL,
   filtrar_pais = NULL,
   seleccionar_columnes = NULL,
-  format_llarg = FALSE) {
+  format_llarg = FALSE,
+  etiquetes = FALSE) {
 
 ### Double Check 01
   if(!is.null(filtrar_provincia) && !is.null(filtrar_pais)) {
@@ -192,15 +196,15 @@ columnes_golvin <- c(
         rep('germany', times = 3),
         rep('france', times = 2),
         rep('italy', times = 1),
-        rep('lybia', times = 1),
+        rep('libya', times = 1),
         rep('tunisia', times = 1),
-        rep('italia', times = 2),
+        rep('italy', times = 2),
         rep('switzerland', times = 1),
         rep('austria', times = 1),
         rep('algeria', times = 2),
         rep('wales', times = 1),
         rep('england', times = 4),
-        rep('netherland', times = 1),
+        rep('netherlands', times = 1),
         rep('romania', times = 1),
         rep('england', times = 1),
         rep('germany', times = 1),
@@ -349,12 +353,12 @@ columnes_golvin <- c(
         rep('romania', times = 1),
         rep('algeria', times = 1),
         rep('tunisia', times = 8),
-        rep('lybia', times = 1),
+        rep('libya', times = 1),
         rep('tunisia', times = 1),
         rep('austria', times = 2),
         rep('hungary', times = 2),
         rep('greece', times = 1),
-        rep('bulgary', times = 1),
+        rep('bulgaria', times = 1),
         rep('wales', times = 1),
         rep('syria', times = 1),
         rep('algeria', times = 1),
@@ -485,7 +489,7 @@ columnes_golvin <- c(
           rep('croatia', times = 1),
           rep('italy', times = 2),
           rep('france', times = 4),
-          rep('germania', times = 1),
+          rep('germany', times = 1),
           rep('france', times = 2),
           rep('italy', times = 4),
           rep('germany', times = 2),
@@ -685,16 +689,45 @@ columnes_golvin <- c(
     ### Double check 03
       stopifnot(all(sapply(l_df_ori_88, ncol) == 7))
 
-    } else {
-
-      l_df_ori_88
-    
     }
 
 ### Fusió de les dues taules per la columna 'nom' i 'original_id'
   df_ori_88 <- dplyr::bind_rows(l_df_ori_88) %>%
     tibble::as_tibble() %>%
     dplyr::arrange(index_id, nom,  provincia_romana, pais)
+
+### labels
+  if (isTRUE(etiquetes)) {
+
+    df_ori_88 <- suppressWarnings(
+      df_ori_88 %>%
+        tidyr::separate(
+          col = provincia_romana,
+          into = c('etiq_i', 'etiq_ii'),
+          sep = '_',
+          extra = 'merge',
+          remove = FALSE) %>%
+        dplyr::mutate(
+          etiq_provincia_i = str_to_title(
+            str_replace(etiq_i, '_+(i|ii|iii|iiii|v|vi|vii|viii|viiii|x|regio)$', '')),
+          etiq_provincia_ii = if_else(
+            is.na(etiq_ii), provincia_romana,
+            str_replace(etiq_ii, '^(i|ii|iii|iiii|v|vi|vii|viii|viiii|x|regio_xi)_', '')),
+          etiq_provincia_ii = str_to_title(
+            str_replace_all(etiq_provincia_ii, '_', ' ')),
+          etiq_provincia_ii = str_replace(etiq_provincia_ii, ' Et ', ' et '),
+          etiq_pais_i = str_to_title(
+            countrycode::countrycode(
+              sourcevar = pais,
+              origin = 'country.name',
+              destination = 'cldr.name.ca',
+              nomatch = NULL)),
+          etiq_pais_i = case_when(
+            etiq_pais_i == 'England' ~ 'Anglaterra', 
+            etiq_pais_i == 'Wales' ~ 'Gal·les',
+            TRUE ~ etiq_pais_i)) %>%
+        dplyr::select(-etiq_i, -etiq_ii))
+  }
 
 
 ### missatge

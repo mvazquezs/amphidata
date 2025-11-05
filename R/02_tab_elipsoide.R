@@ -60,7 +60,7 @@ elipsoide_metrics <- function(
   minor_a, 
   minor_b,
   semieix = TRUE, 
-  tipus_perimetre = c('simple', 'quadratica'),
+  tipus_perimetre = c('simple', 'quadratica', 'ramanujan_i', 'ramanujan_ii'),
   tipus_area = 'Area_A', 
   focus_major = FALSE, 
   focus_minor = FALSE)
@@ -129,18 +129,18 @@ elipsoide_metrics <- function(
         # Distància del centre al focus (c)
         focus_dist_c = base::sqrt(a^2 - b^2),
         # Distància entre focus (2c)
-        Focus_Distance = 2 * .data$focus_dist_c,
+        Focus_Distance = 2 * focus_dist_c,
         # Excentricitat (e = c/a)
-        Excentricity = .data$focus_dist_c / a,
+        Excentricity = focus_dist_c / a,
         # Coordenades dels focus (assumint el centre a (0,0) i eix major a l'eix x)
-        Focus_F1 = -1 * .data$focus_dist_c, # Coordenada x de F1
-        Focus_F2 = .data$focus_dist_c       # Coordenada x de F2
-      ) %>% dplyr::select(-.data$focus_dist_c) # Eliminem la variable c temporal
+        Focus_F1 = -1 * focus_dist_c, # Coordenada x de F1
+        Focus_F2 = focus_dist_c       # Coordenada x de F2
+      ) %>% dplyr::select(-focus_dist_c) # Eliminem la variable c temporal
     }
     
     # 2.5. Seleccionar i Renombrar
     metrics %>%
-      dplyr::select(-.data$a, -.data$b) %>%
+      dplyr::select(-a, -b) %>%
       dplyr::rename_with(~ paste0(prefix, .x))
   }
 
