@@ -10,7 +10,7 @@ load_dimensions_vazquez(
   filtrar_provincia = NULL,
   filtrar_pais = NULL,
   format_llarg = FALSE,
-  retornar_originals = FALSE
+  etiquetes = FALSE
 )
 }
 \arguments{
@@ -23,6 +23,8 @@ load_dimensions_vazquez(
 \item{filtrar_pais}{Lògic. Accepta noms de païssos moderns en anglès.}
 
 \item{format_llarg}{Lògic. Si és TRUE, el dataframe de sortida es retorna en format llarg (pivotat).}
+
+\item{etiquetes.}{Lògic. Si és TRUE, el dataframe de sortida conté columnes etiqueta.}
 }
 \value{
 Un dataframe de R amb les dades fusionades i estructurades dels amfiteatres romans i republicans.

@@ -35,13 +35,13 @@ amphi_load_packages <- function(
   # Llista de paquets a carregar
   packages_to_load <- c(
     'devtools', 'quarto', 'usethis', 'crayon', 'janitor',
-    'dplyr', 'tibble', 'readxl', 'data.table', 'stringr',
+    'dplyr', 'tibble', 'readxl', 'forcats', 'data.table', 'stringr',
     'rlang', 'purrr', 'tidyr', 'missForest', 'psych',
     'DT', 'htmltools', 'knitr', 'webshot', 'webshot2', 'shiny',
     'gtsummary', 'gt', 'gtExtras', 'flextable', 'huxtable',
     'rstatix', 'Hmisc',
-    'showtext', 'extrafont', 'extrafontdb', 'countrycode',
-    'sysfonts', 'ggplot2')
+    'showtext', 'extrafont', 'extrafontdb', 'countrycode', 'sysfonts',
+    'viridis', 'ggplot2')
 
   # Carrega o instal·la els paquets amb pacman
   pacman::p_load(

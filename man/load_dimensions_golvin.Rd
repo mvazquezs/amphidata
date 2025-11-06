@@ -8,7 +8,8 @@ load_dimensions_golvin(
   filtrar_provincia = NULL,
   filtrar_pais = NULL,
   seleccionar_columnes = NULL,
-  format_llarg = FALSE
+  format_llarg = FALSE,
+  etiquetes = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ load_dimensions_golvin(
 \item{seleccionar_columnes}{Selecciona les columnes desitjades per la sortida del dataframe.}
 
 \item{format_llarg}{Lògic. Si és TRUE, el dataframe de sortida es retorna en format llarg (pivotat).}
+
+\item{etiquetes.}{Lògic. Si és TRUE, el dataframe de sortida conté columnes etiqueta.}
 }
 \value{
 Un \code{tibble} amb les dades fusionades i estructurades.

@@ -4,8 +4,11 @@
 * Dades origininals presents en el directori `/inst/extdata/01_data_ori/`.
 
 ## Funcions
-* `00_load_dimensions_vazquez()`: Funció per carregar (usa dades internes), seleccionar i filtrar les dades de Vázquez-Santiago.
-* `00_load_dimensions_golvin()`: Funció per carregar (usa dades internes), seleccionar i filtrar les dades de Golvin.
+* `00_load_dimensions_vazquez()`: 
+- Funció per carregar (usa dades internes), seleccionar, filtrar les dades i generar etiquetes.
+
+* `00_load_dimensions_golvin()`: 
+- Funció per carregar (usa dades internes), seleccionar, filtrar les dades i generar etiquetes.
 
 # amphidata 0.0.0.9000
 

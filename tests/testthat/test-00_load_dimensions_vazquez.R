@@ -73,3 +73,32 @@ test_that('La selecció de columnes funciona', {
   expect_true(all(c('index_id', 'nom', 't_building', 'provincia_romana', 'pais', 'amplada_arena', 'alcada_arena') %in% names(df_seleccionat)))
   expect_equal(ncol(df_seleccionat), 7)
 })
+
+# Test 4: Assegurar que les etiquetes es generen correctament
+test_that('Les etiquetes (labels) es generen correctament', {
+  df_etiquetes <- load_dimensions_vazquez(etiquetes = TRUE)
+  
+  # Comprova que les noves columnes d'etiquetes existeixen
+  expect_true(all(c('etiq_provincia_i', 'etiq_provincia_ii', 'etiq_pais_i', 
+                     'lb_provincia_i', 'lb_provincia_ii', 'lb_pais2_i', 'lb_pais3_i') %in% names(df_etiquetes)))
+  
+  # Comprova el contingut de les etiquetes per a una fila coneguda (p. ex. Hispania/Spain)
+  df_hispania <- df_etiquetes %>% dplyr::filter(pais == 'spain')
+  
+  # Comprova el codi de provincia ad-hoc
+  # Nota: Aquest test pot ser fràgil si les dades canvien. S'assumeix que 'hispania' existeix.
+  if(nrow(df_hispania) > 0) {
+    expect_equal(unique(df_hispania$lb_provincia_i)[1], 'HIS')
+  }
+
+  # Comprova els codis de país ISO
+  if(nrow(df_hispania) > 0) {
+    expect_equal(unique(df_hispania$lb_pais2_i), 'ES')
+    expect_equal(unique(df_hispania$lb_pais3_i), 'ESP')
+  }
+  
+  # Comprova el nom del país en català
+  if(nrow(df_hispania) > 0) {
+    expect_equal(unique(df_hispania$etiq_pais_i), 'Espanya')
+  }
+})

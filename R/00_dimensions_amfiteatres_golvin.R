@@ -713,9 +713,17 @@ columnes_golvin <- c(
           etiq_provincia_ii = if_else(
             is.na(etiq_ii), provincia_romana,
             str_replace(etiq_ii, '^(i|ii|iii|iiii|v|vi|vii|viii|viiii|x|regio_xi)_', '')),
+          etiq_provincia_i = case_when(
+            etiq_provincia_i == 'Corsica' ~ 'Corsica et Sardinia', 
+            etiq_provincia_i == 'Crete' ~ 'Crete et Cyrenaica',
+            TRUE ~ etiq_provincia_i),
           etiq_provincia_ii = str_to_title(
             str_replace_all(etiq_provincia_ii, '_', ' ')),
           etiq_provincia_ii = str_replace(etiq_provincia_ii, ' Et ', ' et '),
+          etiq_provincia_ii = case_when(
+            etiq_provincia_ii == 'Et Sardinia' ~ 'Corsica et Sardinia', 
+            etiq_provincia_ii == 'Et Cyrenaica' ~ 'Crete et Cyrenaica',
+            TRUE ~ etiq_provincia_ii),
           etiq_pais_i = str_to_title(
             countrycode::countrycode(
               sourcevar = pais,
@@ -725,7 +733,17 @@ columnes_golvin <- c(
           etiq_pais_i = case_when(
             etiq_pais_i == 'England' ~ 'Anglaterra', 
             etiq_pais_i == 'Wales' ~ 'Gal·les',
-            TRUE ~ etiq_pais_i)) %>%
+            TRUE ~ etiq_pais_i),
+          lb_pais2_i = countrycode::countrycode(
+              sourcevar = pais,
+              origin = 'country.name',
+              destination = 'iso2c',
+              nomatch = NULL),
+          lb_pais3_i = countrycode::countrycode(
+              sourcevar = pais,
+              origin = 'country.name',
+              destination = 'iso3c',
+              nomatch = NULL)) %>%
         dplyr::select(-etiq_i, -etiq_ii))
   }
 

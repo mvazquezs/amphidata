@@ -30,7 +30,7 @@
 #' @importFrom stats setNames
 #' @importFrom purrr map
 #' @importFrom tidyr pivot_longer
-#' @importFrom stringr str_to_title str_replace str_replace_all
+#' @importFrom stringr str_to_title str_replace str_replace_all str_sub str_to_upper
 #' @importFrom countrycode countrycode
 #' @importFrom crayon bold blue
 #'
@@ -278,6 +278,8 @@ if (!dir.exists(l_dir)) {
           etiq_provincia_ii = str_to_title(
             str_replace_all(etiq_provincia_ii, '_', ' ')),
           etiq_provincia_ii = str_replace(etiq_provincia_ii, ' Et ', ' et '),
+          lb_provincia_i = stringr::str_sub(stringr::str_to_upper(etiq_provincia_i), 1, 3),
+          lb_provincia_ii = stringr::str_sub(stringr::str_to_upper(etiq_provincia_ii), 1, 3),
           etiq_pais_i = str_to_title(
             countrycode::countrycode(
               sourcevar = pais,
@@ -287,7 +289,17 @@ if (!dir.exists(l_dir)) {
           etiq_pais_i = case_when(
             etiq_pais_i == 'England' ~ 'Anglaterra', 
             etiq_pais_i == 'Wales' ~ 'Gal·les',
-            TRUE ~ etiq_pais_i)) %>%
+            TRUE ~ etiq_pais_i),
+          lb_pais2_i = countrycode::countrycode(
+              sourcevar = pais,
+              origin = 'country.name',
+              destination = 'iso2c',
+              nomatch = NULL),
+          lb_pais3_i = countrycode::countrycode(
+              sourcevar = pais,
+              origin = 'country.name',
+              destination = 'iso3c',
+              nomatch = NULL)) %>%
         dplyr::select(-etiq_i, -etiq_ii))
   }
 
