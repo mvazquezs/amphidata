@@ -141,8 +141,10 @@ if (!dir.exists(l_dir)) {
     clean_names = TRUE)
 
 ### Assigna noms als elements de la llista (p. ex., 'hispania', 'panonia')
-  l_names <- tools::file_path_sans_ext(basename(l_fitxers))
-  l_names <- gsub('^\\d{4}-\\d{2}-\\d{2}_ori_', '', l_names)
+  l_names <- stringr::str_sub(
+    tools::file_path_sans_ext(basename(l_fitxers)),
+    start = 16)
+  
   names(l_data_ori) <- l_names
 
 ### Aplica les transformacions inicials (canvi de nom, càlcul de columnes derivades, conversió de tipus)
@@ -281,25 +283,35 @@ if (!dir.exists(l_dir)) {
           lb_provincia_i = stringr::str_sub(stringr::str_to_upper(etiq_provincia_i), 1, 3),
           lb_provincia_ii = stringr::str_sub(stringr::str_to_upper(etiq_provincia_ii), 1, 3),
           etiq_pais_i = str_to_title(
-            countrycode::countrycode(
-              sourcevar = pais,
-              origin = 'country.name',
-              destination = 'cldr.name.ca',
-              nomatch = NULL)),
-          etiq_pais_i = case_when(
-            etiq_pais_i == 'England' ~ 'Anglaterra', 
-            etiq_pais_i == 'Wales' ~ 'Gal·les',
-            TRUE ~ etiq_pais_i),
-          lb_pais2_i = countrycode::countrycode(
-              sourcevar = pais,
-              origin = 'country.name',
-              destination = 'iso2c',
-              nomatch = NULL),
-          lb_pais3_i = countrycode::countrycode(
-              sourcevar = pais,
-              origin = 'country.name',
-              destination = 'iso3c',
-              nomatch = NULL)) %>%
+              countrycode::countrycode(
+                sourcevar = pais,
+                origin = 'country.name',
+                destination = 'cldr.name.ca',
+                nomatch = NULL)),
+            etiq_pais_i = case_when(
+              etiq_pais_i == 'England' ~ 'Anglaterra', 
+              etiq_pais_i == 'Wales' ~ 'Gal·les',
+              TRUE ~ etiq_pais_i),
+            lb_pais2_i = countrycode::countrycode(
+                sourcevar = pais,
+                origin = 'country.name',
+                destination = 'iso2c',
+                nomatch = NULL),
+            lb_pais2_i = case_when(
+              lb_pais2_i == 'england' ~ 'GB-ENG', 
+              lb_pais2_i == 'wales' ~ 'GB-CYM',
+              lb_pais2_i == 'scotland' ~ 'GB-SCT',
+              TRUE ~ lb_pais2_i),
+            lb_pais3_i = countrycode::countrycode(
+                sourcevar = pais,
+                origin = 'country.name',
+                destination = 'iso3c',
+                nomatch = NULL),
+            lb_pais3_i = case_when(
+              lb_pais3_i == 'england' ~ 'GB-ENG', 
+              lb_pais3_i == 'wales' ~ 'GB-CYM',
+              lb_pais3_i == 'scotland' ~ 'GB-SCT',
+              TRUE ~ lb_pais3_i)) %>%
         dplyr::select(-etiq_i, -etiq_ii))
   }
 

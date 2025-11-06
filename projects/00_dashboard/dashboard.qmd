@@ -1,0 +1,244 @@
+--- 
+title: "Amphidata Dashboard"
+format: dashboard
+theme: united
+---
+
+```{r, include = FALSE, message = FALSE, echo = FALSE}
+library(devtools)
+load_all('~/git/amphidata/')
+
+amphi_load_packages(
+  update_packages = FALSE)
+
+### Carrega de dades per 'page 1'
+df_g <- load_dimensions_golvin(
+  filtrar_provincia = NULL,
+  filtrar_pais = NULL,
+  seleccionar_columnes = NULL,
+  format_llarg = FALSE,
+  etiquetes = TRUE)
+
+
+### Carrega de dades per 'page 2'
+df_v <- load_dimensions_vazquez(
+  filtrar_provincia = NULL,
+  filtrar_pais = NULL,
+  seleccionar_columnes = NULL,
+  format_llarg = FALSE,
+  etiquetes = TRUE)
+
+```
+
+# Golvin stats
+
+::: {layout-ncol=2}
+
+::: {.column width="66%"}
+```{r}
+#| label: distrb-golvin
+#| title: Distribució per província romana i país actual
+p <- df_g %>%
+    count(
+      lb_pais3_i, lb_provincia_i,
+      name = 'n_amphi') %>%
+    dplyr::mutate(
+      lb_pais3_i = forcats::fct_reorder(
+        lb_pais3_i, n_amphi,
+        .fun = max,
+        .desc = FALSE),
+      n_amphi_cat = cut(
+        n_amphi,
+        breaks = c(0, 1, 4, 10, Inf),
+        labels = c('1', '[2, 4]', '[5, 10]', '< 10'),
+        right = TRUE,
+        include.lowest = TRUE)) %>%
+  ggplot(
+      aes(
+        x = lb_provincia_i,
+        y = lb_pais3_i,
+        text = paste("Provincia:", lb_provincia_i, "<br>País:", lb_pais3_i, "<br>Nº Amfiteatres:", n_amphi)
+        )) + 
+  geom_point(
+      aes(
+        size = n_amphi_cat,
+        fill = n_amphi_cat),
+      shape = 21,
+      color = 'black',
+      stroke = 0.25,
+      alpha = 0.5) + 
+  scale_size_manual(
+    name = 'Nombre d\'amfiteatres',
+    values = c(2.5, 5, 7.5, 10),
+    drop = FALSE) + 
+  scale_fill_manual(
+    name = 'Nombre d\'amfiteatres',
+    values = viridis::viridis(n = 4, option = 'D', direction = -1),
+    drop = FALSE) + 
+  theme_minimal() + 
+  labs(
+    x = 'Província Romana',
+    y = 'País Modern') + 
+    theme(
+      axis.text.x = element_text(angle = 90, hjust = 1),
+      axis.text.y = element_text(size = 10),
+      legend.position = 'bottom',
+      legend.direction = 'horizontal',
+      legend.title = element_text(size = 10),
+      legend.text = element_text(size = 8),
+      plot.margin = margin(10, 10, 10, 10))
+
+plotly::ggplotly(p, tooltip = 'text')
+```
+:::
+
+::: {.column width="34%"}
+```{r}
+#| title: "Dades de Golvin"
+DT::datatable(df_g[, c("nom", "provincia_romana", "pais", "amplada_general", "alcada_general", "nombre_places")],
+              options = list(pageLength = 10, scrollX = TRUE),
+              caption = "Dades dels amfiteatres segons Golvin (1988)")
+```
+:::
+
+:::
+
+::: {layout-ncol=2}
+
+::: {.column width="66%"}
+```{r}
+#| title: "Relació Dimensions Arena (Golvin)"
+p2 <- ggplot(df_g, aes(x = amplada_arena, y = alcada_arena, size = nombre_places, text = paste("Nom:", nom))) +
+  geom_point(alpha = 0.7, aes(color = pais)) +
+  theme_minimal() +
+  scale_color_viridis_d() +
+  labs(x = "Amplada de l\'arena (m)", y = "Alçada de l\'arena (m)", size = "Nombre de places")
+
+plotly::ggplotly(p2, tooltip = "text")
+```
+:::
+
+::: {.column width="34%"}
+```{r}
+#| title: "Resum per País (Golvin)"
+df_g %>%
+  group_by(pais) %>%
+  summarise(
+    `Nº Amfiteatres` = n(),
+    `Capacitat Mitjana` = mean(nombre_places, na.rm = TRUE)
+  ) %>%
+  gt::gt() %>%
+  gt::tab_header(title = "Resum per País") %>%
+  gt::fmt_number(columns = vars(`Capacitat Mitjana`), decimals = 0)
+```
+:::
+
+:::
+
+<!--
+# Vàzquez stats
+
+::: {layout-ncol=2}
+
+::: {.column width="66%"}
+```{r}
+#| label: distrb-vazq
+#| title: Distribució per província romana i país actual (Vázquez)
+p3 <- df_v %>%
+    distinct(nom, lb_pais3_i, lb_provincia_i) %>%
+    count(
+      lb_pais3_i, lb_provincia_i,
+      name = 'n_amphi') %>%
+    dplyr::mutate(
+      lb_pais3_i = forcats::fct_reorder(
+        lb_pais3_i, n_amphi,
+        .fun = max,
+        .desc = FALSE),
+      n_amphi_cat = cut(
+        n_amphi,
+        breaks = c(0, 1, 4, 10, Inf),
+        labels = c('1', '[2, 4]', '[5, 10]', '< 10'),
+        right = TRUE,
+        include.lowest = TRUE)) %>%
+  ggplot(
+      aes(
+        x = lb_provincia_i,
+        y = lb_pais3_i,
+        text = paste("Provincia:", lb_provincia_i, "<br>País:", lb_pais3_i, "<br>Nº Amfiteatres:", n_amphi)
+        )) + 
+  geom_point(
+      aes(
+        size = n_amphi_cat,
+        fill = n_amphi_cat),
+      shape = 21,
+      color = 'black',
+      stroke = 0.25,
+      alpha = 0.5) + 
+  scale_size_manual(
+    name = 'Nombre d\'amfiteatres',
+    values = c(2.5, 5, 7.5, 10),
+    drop = FALSE) + 
+  scale_fill_manual(
+    name = 'Nombre d\'amfiteatres',
+    values = viridis::viridis(n = 4, option = 'D', direction = -1),
+    drop = FALSE) + 
+  theme_minimal() + 
+  labs(
+    x = 'Província Romana',
+    y = 'País Modern') + 
+    theme(
+      axis.text.x = element_text(angle = 90, hjust = 1),
+      axis.text.y = element_text(size = 10),
+      legend.position = 'bottom',
+      legend.direction = 'horizontal',
+      legend.title = element_text(size = 10),
+      legend.text = element_text(size = 8),
+      plot.margin = margin(10, 10, 10, 10))
+
+plotly::ggplotly(p3, tooltip = "text")
+```
+:::
+
+::: {.column width="34%"}
+```{r}
+#| title: "Dades de Vázquez"
+DT::datatable(df_v[, c("nom", "provincia_romana", "pais", "amplada_general", "alcada_general", "nombre_places")],
+              options = list(pageLength = 10, scrollX = TRUE),
+              caption = "Dades dels amfiteatres segons Vázquez")
+```
+:::
+
+:::
+
+::: {layout-ncol=2}
+
+::: {.column width="66%"}
+```{r}
+#| title: "Relació Dimensions Arena (Vázquez)"
+p4 <- ggplot(df_v, aes(x = amplada_arena, y = alcada_arena, size = nombre_places, text = paste("Nom:", nom))) +
+  geom_point(alpha = 0.7, aes(color = pais)) +
+  theme_minimal() +
+  scale_color_viridis_d() +
+  labs(x = "Amplada de l\'arena (m)", y = "Alçada de l\'arena (m)", size = "Nombre de places")
+
+plotly::ggplotly(p4, tooltip = "text")
+```
+:::
+
+::: {.column width="34%"}
+```{r}
+#| title: "Resum per País (Vázquez)"
+df_v %>%
+  group_by(pais) %>%
+  summarise(
+    `Nº Amfiteatres` = n(),
+    `Capacitat Mitjana` = mean(nombre_places, na.rm = TRUE)
+  ) %>%
+  gt::gt() %>%
+  gt::tab_header(title = "Resum per País") %>%
+  gt::fmt_number(columns = vars(`Capacitat Mitjana`), decimals = 0)
+```
+:::
+
+:::
+-->

@@ -21,3 +21,9 @@
 
 # Ignore PDF files
 *.pdf
+
+# Ignore HTML
+*.html
+
+# Ignore dashboard files
+/projects/00_dashboard/dashboard_files/

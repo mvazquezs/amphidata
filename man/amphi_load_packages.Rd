@@ -13,7 +13,7 @@ amphi_load_packages(update_packages = FALSE)
 No retorna cap valor, però carrega els paquets a l'entorn global.
 }
 \description{
-Aquesta funció utilitza el paquet 'pacman' per comprovar, instal·lar (si cal) i carregar totes les dependències de R per a l'anàlisi. També configura algunes opcions globals de la sessió.
+Aquesta funció utilitza el paquet 'pacman' per comprovar, instal·lar (si cal) i carregar totes les dependències de R per a l'anàlisi. També configura algunes opcions globals de la sessió, com evitar la creació de fitxers .RData i .Rhistory.
 }
 \examples{
 # Carregar tots els paquets necessaris

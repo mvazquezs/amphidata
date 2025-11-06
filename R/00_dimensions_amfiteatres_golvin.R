@@ -724,6 +724,8 @@ columnes_golvin <- c(
             etiq_provincia_ii == 'Et Sardinia' ~ 'Corsica et Sardinia', 
             etiq_provincia_ii == 'Et Cyrenaica' ~ 'Crete et Cyrenaica',
             TRUE ~ etiq_provincia_ii),
+          lb_provincia_i = stringr::str_sub(stringr::str_to_upper(etiq_provincia_i), 1, 3),
+          lb_provincia_ii = stringr::str_sub(stringr::str_to_upper(etiq_provincia_ii), 1, 3),
           etiq_pais_i = str_to_title(
             countrycode::countrycode(
               sourcevar = pais,
@@ -739,11 +741,19 @@ columnes_golvin <- c(
               origin = 'country.name',
               destination = 'iso2c',
               nomatch = NULL),
+          lb_pais2_i = case_when(
+            lb_pais2_i == 'england' ~ 'GB-ENG', 
+            lb_pais2_i == 'wales' ~ 'GB-CYM',
+            TRUE ~ lb_pais2_i),
           lb_pais3_i = countrycode::countrycode(
               sourcevar = pais,
               origin = 'country.name',
               destination = 'iso3c',
-              nomatch = NULL)) %>%
+              nomatch = NULL),
+          lb_pais3_i = case_when(
+            lb_pais3_i == 'england' ~ 'GB-EN', 
+            lb_pais3_i == 'wales' ~ 'GB-CY',
+            TRUE ~ lb_pais3_i),) %>%
         dplyr::select(-etiq_i, -etiq_ii))
   }
 
