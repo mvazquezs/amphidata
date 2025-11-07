@@ -163,27 +163,27 @@ Es recalcularan l'àrea i el perímetre per a totes les el·lipses i es comparar
 
 *   **Àrea de l'El·lipse (A):**
 
-    $$ A = \pi \cdot \frac{a}{2} \cdot \frac{b}{2} $${#eq-area}
+$$ A = \pi \cdot \frac{a}{2} \cdot \frac{b}{2} $${#eq-area}
 
 *   **Perímetre (Aproximació Simple, $P_1$):**
 
-    $$ P_1 = \pi \left( \frac{a}{2} + \frac{b}{2} \right) $${#eq-perimetre-simple}
+$$ P_1 = \pi \left( \frac{a}{2} + \frac{b}{2} \right) $${#eq-perimetre-simple}
 
 Les aproximacions alternatives per al seu calcul serien les següents:
 
 *   **Perímetre (Aproximació quadràtica, $P_Q$):**
 
-    $$ P_Q = 2 \cdot \pi \sqrt{\frac{a^2 + b^2}{2}} $${#eq-perimetre-quadratica}
+$$ P_Q = 2 \cdot \pi \sqrt{\frac{a^2 + b^2}{2}} $${#eq-perimetre-quadratica}
 
 *   **Perímetre (Aproximació de Ramanujan I, $P_{RI}$):**
 
-    $$ P_{RI} = \pi [3(a+b) - \sqrt{(3a+b)(a+3b)}] $${#eq-perimetre-ramanujan_i}
+$$ P_{RI} = \pi [3(a+b) - \sqrt{(3a+b)(a+3b)}] $${#eq-perimetre-ramanujan_i}
 
 *   **Perímetre (Aproximació de Ramanujan II, $P_{RII}$):** Aquesta aproximació és més precisa i utilitza un paràmetre intermedi `h`.
 
-    $$ h = \frac{(a - b)^2}{(a + b)^2} $${#eq-h-ramanujan}
+$$ h = \frac{(a - b)^2}{(a + b)^2} $${#eq-h-ramanujan}
 
-    $$ P_{RII} \approx \pi (a+b) \left( 1 + \frac{3h}{10 + \sqrt{4-3h}} \right) $${#eq-perimetre-ramanujan_ii}
+$$ P_{RII} \approx \pi (a+b) \left( 1 + \frac{3h}{10 + \sqrt{4-3h}} \right) $${#eq-perimetre-ramanujan_ii}
 
 
 
