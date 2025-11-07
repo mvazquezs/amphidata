@@ -23,7 +23,9 @@
 *.pdf
 
 # Ignore HTML
-*.html
+/projects/00_dashboard/*.html
 
 # Ignore dashboard files
 /projects/00_dashboard/dashboard_files/
+/sap_amphidata_files/
+

@@ -8,10 +8,11 @@ author:
     github: "mvazquezs"
 date: "2025-10-01"
 format:
-  gfm:
+  html:
     toc: true
     toc-depth: 3
     number-sections: false
+    math: katex
 ---
 
 # 1. Introducció al Projecte

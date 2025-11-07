@@ -27,3 +27,20 @@ options(
 <!-- badges: start -->
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 <!-- badges: end -->
+
+
+# amphidata SAP
+```{r render-sap, eval=TRUE, echo=FALSE}
+
+### Render the Quarto document
+  quarto::quarto_render(
+    input = 'sap_amphidata.qmd',
+    output_format = 'html')
+
+### Get the path to the generated HTML file
+  html_file_path <- normalizePath(file.path(getwd(), 'sap_amphidata.html'))
+
+### Display a link to the HTML file
+  cat(paste0('Open the SAP document: [SAP_Amphidata.html](file:///', html_file_path, ')\n'))
+
+```
