@@ -28,6 +28,19 @@ df_v <- load_dimensions_vazquez(
   format_llarg = FALSE,
   etiquetes = TRUE)
 
+### Calcul de les metriques el·liptiques
+df_g_elip <- elipsoide_metrics(
+  df = df_g,
+  major_a = 'amplada_general',
+  major_b = 'alcada_general',
+  minor_a = 'amplada_arena',
+  minor_b = 'alcada_arena',
+  semieix = TRUE,
+  tipus_perimetre = c('simple', 'quadratica', 'ramanujan_i', 'ramanujan_ii'),
+  tipus_area = 'area',
+  focus_major = TRUE,
+  focus_minor = TRUE)
+
 ```
 
 # Golvin stats

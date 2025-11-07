@@ -12,7 +12,7 @@ elipsoide_metrics(
   minor_b,
   semieix = TRUE,
   tipus_perimetre = c("simple", "quadratica", "ramanujan_i", "ramanujan_ii"),
-  tipus_area = "Area_A",
+  tipus_area = "area",
   focus_major = FALSE,
   focus_minor = FALSE
 )
@@ -35,7 +35,7 @@ eixos sencers (TRUE, cal dividir per 2 per obtenir el semieix) o si ja són els 
 Opcions vàlides: 'simple', 'quadratica', 'ramanujan_i', 'ramanujan_ii'.}
 
 \item{tipus_area}{La cadena de caràcters que indica el nom de l'àrea a calcular. Actualment, només s'accepta
-la fórmula 'Area_A' (A = pi * a * b).}
+la fórmula 'area' (A = pi * a * b).}
 
 \item{focus_major}{Un valor lògic (TRUE/FALSE) per calcular la distància focal, l'excentricitat i les coordenades
 dels focus (F1 i F2) per a l'el·lipse Major.}

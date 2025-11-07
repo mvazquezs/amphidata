@@ -24,6 +24,7 @@
 
 # Ignore HTML
 /projects/00_dashboard/*.html
+/sap_amphidata.html
 
 # Ignore dashboard files
 /projects/00_dashboard/dashboard_files/

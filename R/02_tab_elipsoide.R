@@ -13,7 +13,7 @@
 #' @param tipus_perimetre Un vector de caràcters que especifica les aproximacions de perímetre a calcular.
 #'        Opcions vàlides: 'simple', 'quadratica', 'ramanujan_i', 'ramanujan_ii'.
 #' @param tipus_area La cadena de caràcters que indica el nom de l'àrea a calcular. Actualment, només s'accepta
-#'        la fórmula 'Area_A' (A = pi * a * b).
+#'        la fórmula 'area' (A = pi * a * b).
 #' @param focus_major Un valor lògic (TRUE/FALSE) per calcular la distància focal, l'excentricitat i les coordenades
 #'        dels focus (F1 i F2) per a l'el·lipse Major.
 #' @param focus_minor Un valor lògic (TRUE/FALSE) per calcular la distància focal, l'excentricitat i les coordenades
@@ -54,26 +54,30 @@
 #' @rdname elipsoide_metrics
 #' @export
 elipsoide_metrics <- function(
-  df, 
-  major_a, 
-  major_b, 
-  minor_a, 
+  df,
+  major_a,
+  major_b,
+  minor_a,
   minor_b,
-  semieix = TRUE, 
+  semieix = TRUE,
   tipus_perimetre = c('simple', 'quadratica', 'ramanujan_i', 'ramanujan_ii'),
-  tipus_area = 'Area_A', 
-  focus_major = FALSE, 
+  tipus_area = 'area',
+  focus_major = FALSE,
   focus_minor = FALSE)
 {
-
+  
   # 1. Capturem els arguments (Tidy Evaluation)
-  major_a_sym <- dplyr::enquo(major_a)
-  major_b_sym <- dplyr::enquo(major_b)
-  minor_a_sym <- dplyr::enquo(minor_b)
-  minor_b_sym <- dplyr::enquo(minor_b)
-
+  major_a_sym <- rlang::enquo(major_a)
+  major_b_sym <- rlang::enquo(major_b)
+  minor_a_sym <- rlang::enquo(minor_a)
+  minor_b_sym <- rlang::enquo(minor_b)
+  
   # 2. Funció interna per calcular les mètriques d'una el·lipse
-  .calculate_metrics <- function(a_full, b_full, prefix) {
+  .calculate_metrics <- function(
+    a_full, 
+    b_full,
+    noms,
+    sufix) {
     
     # 2.1. Ajustar a i b si cal dividir per 2
     scale <- ifelse(semieix, 2, 1)
@@ -81,85 +85,71 @@ elipsoide_metrics <- function(
     b <- b_full / scale # Semieix menor
     
     # Comprovem que 'a' sigui el semieix major (a >= b)
-    if (!all(a >= b, na.rm = TRUE)) {
-      warning(paste("Per a l'el·lipse", prefix, "el semieix major (a) ha de ser >= al semieix menor (b). Es reassignaran valors si cal."))
+    if (!all(a >= b, na.rm = TRUE) && !all(is.na(a) | is.na(b))) {
+      
+      incorrect_indices <- which(b > a)
+
+        if (length(incorrect_indices) > 0) {
+          
+          message(paste0("Per a l'el·lipse '", sufix, "', els següents amfiteatres tenen b > a: ", paste(noms[incorrect_indices], collapse = ", ")))
+        
+        }
+      
+      warning(paste('Per a l\'el·lipse', sufix, 'el semieix major (a) ha de ser >= al semieix menor (b). Es reassignaran valors si cal.'))
+      
       # Utilitzem pmax i pmin per intercanviar si b > a, només per als càlculs
-      a_calc <- pmax(a, b)
-      b_calc <- pmin(a, b)
+      a_calc <- pmax(a, b, na.rm = TRUE)
+      b_calc <- pmin(a, b, na.rm = TRUE)
       a <- a_calc
       b <- b_calc
     }
-
+    
     metrics <- tibble::tibble(a = a, b = b)
     
-    # 2.2. Càlcul de l'Àrea (A = pi * a * b)
-    if ('Area_A' %in% tipus_area) {
-      metrics <- metrics %>% dplyr::mutate(
-        Area_A = base::pi * a * b
-      )
-    }
+    # 2.2. Càlcul de mètriques en una sola crida a dplyr::mutate
+    metrics <- metrics %>%
+      dplyr::mutate(
+        # Àrea
+        area = if ('area' %in% tipus_area) base::pi * a * b else NA,
+        
+        # Perímetres
+        perimetre_P1 = if ('simple' %in% tipus_perimetre) base::pi * (a + b) else NA,
+        perimetre_PQ = if ('quadratica' %in% tipus_perimetre) 2 * base::pi * base::sqrt((a^2 + b^2) / 2) else NA,
+        perimetre_RI = if ('ramanujan_i' %in% tipus_perimetre) base::pi * (3 * (a + b) - base::sqrt((3 * a + b) * (a + 3 * b))) else NA,
+        
+        # Perímetre de Ramanujan II (amb variable temporal 'h')
+        h = if ('ramanujan_ii' %in% tipus_perimetre) (a - b)^2 / (a + b)^2 else NA,
+        perimetre_RII = if ('ramanujan_ii' %in% tipus_perimetre) base::pi * (a + b) * (1 + (3 * h) / (10 + base::sqrt(4 - 3 * h))) else NA,
+        
+        # Focus i Excentricitat
+        focus_dist_c = if (isTRUE(focus_major || focus_minor)) base::sqrt(a^2 - b^2) else NA,
+        focus_dist = ifelse(!is.na(focus_dist_c), 2 * focus_dist_c, NA),
+        excentricitat_e = if (isTRUE(focus_major || focus_minor)) focus_dist_c / a else NA,
+        focus_1 = ifelse(!is.na(focus_dist_c), -1 * focus_dist_c, NA),
+        focus_2 = ifelse(!is.na(focus_dist_c), focus_dist_c, NA))
     
-    # 2.3. Càlcul dels Perímetres
-    if ('simple' %in% tipus_perimetre) {
-      metrics <- metrics %>% dplyr::mutate(
-        Perimeter_P1 = base::pi * (a + b)
-      )
-    }
-    if ('quadratica' %in% tipus_perimetre) {
-      metrics <- metrics %>% dplyr::mutate(
-        Perimeter_PQ = 2 * base::pi * base::sqrt((a^2 + b^2) / 2)
-      )
-    }
-    if ('ramanujan_i' %in% tipus_perimetre) {
-      metrics <- metrics %>% dplyr::mutate(
-        Perimeter_RI = base::pi * (3 * (a + b) - base::sqrt((3 * a + b) * (a + 3 * b)))
-      )
-    }
-    if ('ramanujan_ii' %in% tipus_perimetre) {
-      metrics <- metrics %>% dplyr::mutate(
-        h = (a - b)^2 / (a + b)^2,
-        Perimeter_RII = base::pi * (a + b) * (1 + (3 * .data$h) / (10 + base::sqrt(4 - 3 * .data$h)))
-      ) %>% dplyr::select(-.data$h) # Eliminem la variable h temporal
-    }
-
-    # 2.4. Càlcul de Focus i Excentricitat
-    if ((prefix == "Major_" && focus_major) || (prefix == "Minor_" && focus_minor)) {
-      # Càlcul de la distància focal 'c' (c = sqrt(a^2 - b^2))
-      metrics <- metrics %>% dplyr::mutate(
-        # Distància del centre al focus (c)
-        focus_dist_c = base::sqrt(a^2 - b^2),
-        # Distància entre focus (2c)
-        Focus_Distance = 2 * focus_dist_c,
-        # Excentricitat (e = c/a)
-        Excentricity = focus_dist_c / a,
-        # Coordenades dels focus (assumint el centre a (0,0) i eix major a l'eix x)
-        Focus_F1 = -1 * focus_dist_c, # Coordenada x de F1
-        Focus_F2 = focus_dist_c       # Coordenada x de F2
-      ) %>% dplyr::select(-focus_dist_c) # Eliminem la variable c temporal
-    }
-    
-    # 2.5. Seleccionar i Renombrar
+    # 2.3. Seleccionar i Renombrar
     metrics %>%
-      dplyr::select(-a, -b) %>%
-      dplyr::rename_with(~ paste0(prefix, .x))
+      dplyr::select(-a, -b, -focus_dist_c) %>%
+      dplyr::rename_with(~ paste0(.x, '_', sufix))
   }
-
+  
   # 3. Càlcul de Mètriques per a l'El·lipse Major (Amfiteatre)
   major_metrics <- .calculate_metrics(
     a_full = dplyr::pull(df, !!major_a_sym),
     b_full = dplyr::pull(df, !!major_b_sym),
-    prefix = "Major_"
-  )
-
+    noms = dplyr::pull(df, nom),
+    sufix = 'general')
+  
   # 4. Càlcul de Mètriques per a l'El·lipse Minor (Arena)
   minor_metrics <- .calculate_metrics(
     a_full = dplyr::pull(df, !!minor_a_sym),
     b_full = dplyr::pull(df, !!minor_b_sym),
-    prefix = "Minor_"
-  )
-
+    noms = dplyr::pull(df, nom),
+    sufix = 'arena') 
+  
   # 5. Combinar els resultats amb el data frame original
   df_result <- dplyr::bind_cols(df, major_metrics, minor_metrics)
-
+  
   return(df_result)
 }

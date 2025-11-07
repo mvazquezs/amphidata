@@ -227,9 +227,9 @@ Aquest dashboard se centrarà en la presentació dels resultats inferencials, de
 
 | Nom del Fitxer CSV | Columna | Taula al Dashboard | Contingut (SAP Secció) | Columnes Clau | Descripció (SAP) | 
 |---|---|---|---|---|---|---|
-| `wilcox_results.csv` | Columna 1 (2/3) | Taules 2 i 3 | Comparació de Fonts (4.2.2) | Test (Friedman o Wilcoxon) \n chisq (o V) \n p.adj (Post-Hoc). | - |
-| `cluster_characteristics.csv` | Columna 2 (1/3) | Taula 4 | Anàlisi de Clústers (4.3) | cluster_id \n N_observacions\n Mitjana_Amplada_General \n Mitjana_Ratio_Arena | - |
-| `perimeter_comparison.csv` | Columna 3 (1/3) | Taula 5 | Avaluació de Càlculs (4.4) | Comparacio (PRII vs P1) \n N \n V (Estadístic de Wilcoxon) \n Eff_r \n Signif. | - |
+| `wilcox_results.csv` | Columna 1 (2/3) | Taules 2 i 3 | Comparació de Fonts (4.2.2) | Test (Friedman o Wilcoxon) \n chisq \n p.adj (Post-Hoc) | - |
+| `cluster_characteristics.csv` | Columna 2 (1/3) | Taula 4 | Anàlisi de Clústers (4.3) | cluster_id \n N_observacions \n Mitjana_Amplada_General \n Mitjana_Ratio_Arena | - |
+| `perimeter_comparison.csv` | Columna 3 (1/3) | Taula 5 | Avaluació de Càlculs (4.4) | Comparacio (PRII vs P1) \n N \n (Estadístic de Wilcoxon) \n Eff_r \n Signif | - |
 
 Aquest fitxer SAP_Amfiteatres.qmd és ara el teu document mestre que defineix l'abast i la metodologia, i fa referència explícita als dos dashboards que generaràs.
 
