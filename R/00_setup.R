@@ -25,35 +25,6 @@ amphi_load_packages <- function(
     utils::install.packages('pacman')
   
   }
-  
-  ### Opcions per evitar la creació de fitxers .RData i .Rhistory
-  if (interactive()) {
-    
-    invisible(utils::rc.settings(ipck = TRUE))
-    
-    if (!'package:devtools' %in% search()) {
-      message('Using user-customized .Rprofile')
-    
-    }
-    require('utils')
-  
-  ### '.Rhistory' i '.RData'
-    options(
-      save.defaults = list(
-      save.image.defaults = list(
-        ask = 'default',
-        safe = TRUE,
-        compress = 'bzip2'),
-      save.history.defaults = list(
-        ask = 'default',
-        safe = TRUE)),
-      menu.graphics = FALSE,
-      save.image.defaults = list(
-        ask = 'default',
-        safe = TRUE,
-        compress = 'bzip2'))
-  
-  }
 
 ### Configura el repositori de CRAN
   local({

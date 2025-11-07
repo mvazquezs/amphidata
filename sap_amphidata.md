@@ -486,11 +486,14 @@ Es recalcularan l’àrea i el perímetre per a totes les el·lipses i es
 compararà la precisió de dues fórmules per al perímetre. Les
 aproximacions usades han estat:
 
--   **Àrea de l’El·lipse (A):** <span id="eq-area">
+-   **Àrea de l’El·lipse (A):**
+
+    <span id="eq-area">
     $$ A = \pi \cdot \frac{a}{2} \cdot \frac{b}{2}  \qquad(1)$$
     </span>
 
 -   **Perímetre (Aproximació Simple, *P*<sub>1</sub>):**
+
     <span id="eq-perimetre-simple">
     $$ P_1 = \pi \left( \frac{a}{2} + \frac{b}{2} \right)  \qquad(2)$$
     </span>
@@ -498,20 +501,26 @@ aproximacions usades han estat:
 Les aproximacions alternatives per al seu calcul serien les següents:
 
 -   **Perímetre (Aproximació quadràtica, *P*<sub>*Q*</sub>):**
+
     <span id="eq-perimetre-quadratica">
     $$ P_Q = 2 \cdot \pi \sqrt{\frac{a^2 + b^2}{2}}  \qquad(3)$$
     </span>
 
 -   **Perímetre (Aproximació de Ramanujan I, *P*<sub>*R**I*</sub>):**
+
     <span id="eq-perimetre-ramanujan_i">
     $$ P\_{RI} = \pi \[3(a+b) - \sqrt{(3a+b)(a+3b)}\]  \qquad(4)$$
     </span>
 
 -   **Perímetre (Aproximació de Ramanujan II,
     *P*<sub>*R**I**I*</sub>):** Aquesta aproximació és més precisa i
-    utilitza un paràmetre intermedi `h`. <span id="eq-h-ramanujan">
+    utilitza un paràmetre intermedi `h`.
+
+    <span id="eq-h-ramanujan">
     $$ h = \frac{(a - b)^2}{(a + b)^2}  \qquad(5)$$
-    </span> <span id="eq-perimetre-ramanujan_ii">
+    </span>
+
+    <span id="eq-perimetre-ramanujan_ii">
     $$ P\_{RII} \approx \pi (a+b) \left( 1 + \frac{3h}{10 + \sqrt{4-3h}} \right)  \qquad(6)$$
     </span>
 
