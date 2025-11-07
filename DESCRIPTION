@@ -1,6 +1,6 @@
 Package: amphidata
 Title: Eines per a la Gestió i Anàlisi de Dades d'Amfiteatres Romans
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: 
     person(given = "Miquel",
            family = "Vazquez-Santiago",
