@@ -7,11 +7,3 @@
 <!-- badges: start -->
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 <!-- badges: end -->
-
-
-
-
-
-# amphidata SAP
-
-Per veure el document SAP, accedir a: [`sap_amphidata.html`](file:///C:/Users/my_annamiquel/Documents/git/amphidata/sap_amphidata.html)
