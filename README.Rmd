@@ -1,6 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   tidy = FALSE,
   width = 120,
@@ -17,9 +17,7 @@ options(
   pillar.max_title_chars = 5,
   pillar.min_title_chars = 5,
   pillar.max_footer_lines = 12,
-  conflicts.policy = list(warn = FALSE)
-)
-
+  conflicts.policy = list(warn = FALSE))
 ```
 
 # amphidata <a href="https://amphidata.r-lib.org/"><img src="man/figures/amphi_logo.png" align="right" height="300" alt=""/></a>
@@ -30,17 +28,5 @@ options(
 
 
 # amphidata SAP
-```{r render-sap, eval=TRUE, echo=FALSE}
 
-### Render the Quarto document
-  quarto::quarto_render(
-    input = 'sap_amphidata.qmd',
-    output_format = 'html')
-
-### Get the path to the generated HTML file
-  html_file_path <- normalizePath(file.path(getwd(), 'sap_amphidata.html'))
-
-### Display a link to the HTML file
-  cat(paste0('Open the SAP document: [SAP_Amphidata.html](file:///', html_file_path, ')\n'))
-
-```
+Per veure el document SAP, accedir a: [`sap_amphidata.html`](sap_amphidata.html)
