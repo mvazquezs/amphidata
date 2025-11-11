@@ -4,6 +4,15 @@ format: dashboard
 theme: united
 ---
 
+<style>
+.dt-button {
+  padding: 0.1em 0.4em;
+  font-size: 0.7em;
+  line-height: 1;
+  border-radius: 3px;
+}
+</style>
+
 ```{r, include = FALSE, message = FALSE, echo = FALSE}
 library(devtools)
 load_all('~/git/amphidata/')
@@ -47,7 +56,7 @@ df_g_elip <- elipsoide_metrics(
 
 ::: {layout-ncol=2}
 
-::: {.column width="66%"}
+::: {.column width="60%"}
 ```{r}
 #| label: distrb-golvin
 #| title: Distribució per província romana i país actual
@@ -105,12 +114,51 @@ plotly::ggplotly(p, tooltip = 'text')
 ```
 :::
 
-::: {.column width="34%"}
+::: {.column width="40%"}
 ```{r}
-#| title: "Dades de Golvin"
-DT::datatable(df_g[, c("nom", "provincia_romana", "pais", "amplada_general", "alcada_general", "nombre_places")],
-              options = list(pageLength = 10, scrollX = TRUE),
-              caption = "Dades dels amfiteatres segons Golvin (1988)")
+#| label: table-golvin
+#| title: Dades de Golvin
+DT::datatable(
+  df_g %>%
+    count(
+      etiq_pais_i, etiq_provincia_i,
+      name = 'n_amphi') %>%
+    dplyr::mutate(
+      perc_total = round(n_amphi / sum(n_amphi) * 100, digits = 2)) %>%
+    group_by(etiq_pais_i) %>%
+    dplyr::mutate(
+      perc_pais = round(n_amphi / sum(n_amphi) * 100, digits = 2)) %>%
+    ungroup() %>%
+    group_by(etiq_provincia_i) %>%
+    dplyr::mutate(
+      perc_provincia = round(n_amphi / sum(n_amphi) * 100, digits = 2)) %>%
+    ungroup() %>%
+    arrange(etiq_pais_i, desc(n_amphi)),
+  colnames = c(
+    'País' = 'etiq_pais_i',
+    'Província' = 'etiq_provincia_i',
+    'N' = 'n_amphi',
+    '% Total' = 'perc_total', 
+    '% País' = 'perc_pais', 
+    '% Província' = 'perc_provincia'),
+  extensions = 'Buttons',
+  options = list(
+    pageLength = 5,
+    scrollX = TRUE,
+    dom = 'Bfrtip',
+    buttons = list(
+      list(extend = 'csv', text = 'CSV'),
+      list(extend = 'excel', text = 'XLSX'),
+      list(extend = 'colvis', text = 'Ocultar Columnes')),
+  caption = 'Dades dels amfiteatres segons Golvin (1988)')) %>%
+  formatStyle(
+    columns = c( '% Total', '% País', '% Província'),
+    backgroundColor = styleInterval(
+      cuts = seq(0, 100, length.out = 9), 
+      values = colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(10)),
+    backgroundSize = '100% 90%',
+    backgroundRepeat = 'no-repeat',
+    backgroundPosition = 'center')
 ```
 :::
 
@@ -132,6 +180,7 @@ plotly::ggplotly(p2, tooltip = "text")
 :::
 
 ::: {.column width="34%"}
+::: {.row width="55%"}
 ```{r}
 #| title: "Resum per País (Golvin)"
 df_g %>%
