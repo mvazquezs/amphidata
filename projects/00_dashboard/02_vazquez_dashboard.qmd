@@ -1,0 +1,274 @@
+--- 
+title: "Amphidata 2025"
+format: 
+  dashboard:
+    orientation: columns
+    nav-buttons:
+      - icon: github
+        href: https://github.com/mvazquezs/amphidata/
+      - icon: linkedin
+        href: https://es.linkedin.com/in/miquel-vazquez/
+logo: amphi_logo.png
+theme: united
+---
+
+<style>
+.dt-button {
+  padding: 0.1em 0.4em;
+  font-size: 0.7em;
+  line-height: 0.75;
+  border-radius: 3px;
+}
+</style>
+
+```{r, include = FALSE, message = FALSE, echo = FALSE, cache = FALSE}
+library(devtools)
+load_all('~/git/amphidata/')
+
+amphi_load_packages(
+  update_packages = FALSE)
+
+### Carrega de dades
+df_v <- load_dimensions_vazquez(
+  filtrar_edifici = 'amphitheater',
+  filtrar_provincia = NULL,
+  filtrar_pais = NULL,
+  seleccionar_columnes = NULL,
+  format_llarg = FALSE,
+  etiquetes = TRUE)
+
+### Resum de la totalitat de les dades
+tab_df_v <- tab_summary(
+    df = df_v,
+    grup_by = c('nom', 'etiq_pais_i', 'lb_pais3_i', 'etiq_provincia_i', 'lb_provincia_i', 'etiq_provincia_ii'),
+    addicio_info = NULL,
+    seleccio_variables = c(
+      contains('arena'), contains('general'), -contains('perimetre'),
+      ratio_arena, nombre_places),
+    stats_adicionals = FALSE,
+    sd_num = NULL,
+    q_lower = NULL,
+    q_upper = NULL,
+    na.rm = TRUE,
+    bind_rows = TRUE,
+    digits = 2) %>%
+  select(nom, starts_with('etiq_'), starts_with('lb_'), variable, median) %>%
+  pivot_wider(
+    names_from = variable,
+    values_from = median)
+
+
+```
+
+# Stats
+
+## Row - Dimensions by Vàzquez {width = 70%}
+### Column {width = 100%}
+```{r, message = FALSE, echo = FALSE}
+#| label: table-all-vazquez
+#| title: Dimensions amfiteatres segons Vázquez
+
+# Define colors and cuts for styling
+rampa_color <- colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(20)
+
+cuts_arena <- seq(
+  from = min(tab_df_v[['superficie_arena']], na.rm = TRUE),
+  to = max(tab_df_v[['superficie_arena']], na.rm = TRUE),
+  length.out = 19)
+
+cuts_general <- seq(
+  from = min(tab_df_v[['superficie_general']], na.rm = TRUE),
+  to = max(tab_df_v[['superficie_general']], na.rm = TRUE),
+  length.out = 19)
+
+cuts_aforament <- seq(
+  from = min(tab_df_v[['nombre_places']], na.rm = TRUE),
+  to = max(tab_df_v[['nombre_places']], na.rm = TRUE),
+  length.out = 19)
+
+DT::datatable(
+  tab_df_v %>%
+    dplyr::mutate(
+      nom = stringr::str_to_title(nom)) %>%
+    dplyr::mutate_at(
+      vars(starts_with('amplada'), starts_with('alcada')), 
+      ~ round(., digits = 1)) %>%
+    dplyr::mutate_at(
+      vars(starts_with('superficie'), starts_with('ratio')), 
+      ~ round(., digits = 2)) %>%
+    dplyr::mutate_at(
+      vars(starts_with('etiq_')), 
+      ~ as.factor(.)) %>%
+    dplyr::select(
+      nom,
+      starts_with('etiq_'), 
+      amplada_arena, alcada_arena, 
+      amplada_general, alcada_general, 
+      starts_with('superficie'), 
+      ratio_arena, nombre_places),
+    colnames = c(
+      'Nom' = 'nom',
+      'País' = 'etiq_pais_i',
+      'Província' = 'etiq_provincia_i',
+      'Regió' = 'etiq_provincia_ii',
+      'Amplada arena (m)' = 'amplada_arena',
+      'Alçada arena (m)' = 'alcada_arena',
+      'Amplada general (m)' = 'amplada_general',
+      'Alçada general (m)' = 'alcada_general',
+      'Superfície arena (m2)' = 'superficie_arena',
+      'Superfície general (m2)' = 'superficie_general',
+      'Ratio arena' = 'ratio_arena',
+      'Aforament' = 'nombre_places'),
+    extensions = 'Buttons',
+    filter = 'top',
+    options = list(
+      pageLength = 10,
+      lengthMenu = c(5, 10, 25, 50, 100),
+      autoWidth = TRUE,
+      scrollX = TRUE,
+      dom = 'Bfrtip',
+      buttons = list(
+        list(extend = 'csv', text = 'CSV'),
+        list(extend = 'excel', text = 'XLSX'),
+        list(extend = 'colvis', text = 'Ocultar Columnes')),
+    caption = 'Dimensions d\'amfiteatres segons Golvin (1988)')) %>%
+  formatStyle(
+    columns = 'Superfície arena (m2)',
+    backgroundColor = styleInterval(
+      cuts = cuts_arena, 
+      values = rampa_color),
+    backgroundSize = '100% 90%',
+    backgroundRepeat = 'no-repeat',
+    backgroundPosition = 'center') %>%
+  formatStyle(
+    columns = 'Superfície general (m2)',
+    backgroundColor = styleInterval(
+      cuts = cuts_general, 
+      values = rampa_color),
+    backgroundSize = '100% 90%',
+    backgroundRepeat = 'no-repeat',
+    backgroundPosition = 'center') %>%
+  formatStyle(
+    columns = 'Aforament',
+    backgroundColor = styleInterval(
+      cuts = cuts_aforament, 
+      values = rampa_color),
+    backgroundSize = '100% 90%',
+    backgroundRepeat = 'no-repeat',
+     backgroundPosition = 'center')
+
+```
+
+# Distribució
+
+## Column - Nombre amfiteatres by Vàzquez {width = 70%}
+
+```{r}
+#| label: distrb-vazquez
+#| title: Distribució amfiteatres segons provincia i país
+p_01_vazquez <- tab_df_v %>%
+    count(
+      lb_pais3_i, lb_provincia_i,
+      name = 'n_amphi') %>%
+    dplyr::mutate(
+      lb_pais3_i = forcats::fct_reorder(
+        lb_pais3_i, n_amphi,
+        .fun = max,
+        .desc = FALSE),
+      n_amphi_cat = cut(
+        n_amphi,
+        breaks = c(0, 2, 5, 10, 25, Inf),
+        labels = c('[1, 2]', '[3, 5]', '[6, 10]', '[11, 25]', '> 25'),
+        right = TRUE,
+        include.lowest = TRUE)) %>%
+  ggplot(
+      aes(
+        x = lb_provincia_i,
+        y = lb_pais3_i,
+        text = paste('Provincia:', lb_provincia_i, '<br>País:', lb_pais3_i, '<br>N:', n_amphi)
+        )) + 
+  geom_point(
+      aes(
+        size = n_amphi_cat,
+        fill = n_amphi_cat),
+      shape = 21,
+      color = 'black',
+      stroke = 0.25,
+      alpha = 0.5) + 
+  scale_size_manual(
+    name = 'Nombre d\'amfiteatres',
+    values = c(2.5, 5, 7.5, 10, 12.5, 15),
+    drop = FALSE) + 
+  scale_fill_manual(
+    name = 'Nombre d\'amfiteatres',
+    values = viridis::viridis(n = 6, option = 'D', direction = -1),
+    drop = FALSE) + 
+  theme_minimal() + 
+  labs(
+    x = 'Província Romana',
+    y = 'País Modern') + 
+    theme(
+      axis.text.x = element_text(angle = 90, hjust = 1),
+      axis.text.y = element_text(size = 10),
+      legend.position = 'bottom',
+      legend.direction = 'horizontal',
+      legend.title = element_text(size = 10),
+      legend.text = element_text(size = 8),
+      plot.margin = margin(10, 10, 10, 10))
+
+plotly::ggplotly(p_01_vazquez, tooltip = 'text')
+```
+
+## Column - Nombre amfiteatres segons provincia i país {width = 30%}
+```{r}
+#| label: table-vazquez
+#| title: Nombre amfiteatres segons provincia i país
+
+DT::datatable(
+  tab_df_v %>%
+    count(
+      etiq_pais_i, etiq_provincia_i,
+      name = 'n_amphi') %>%
+    dplyr::mutate(
+      perc_total = round(n_amphi / sum(n_amphi) * 100, digits = 2)) %>%
+    group_by(etiq_pais_i) %>%
+    dplyr::mutate(
+      perc_pais = round(n_amphi / sum(n_amphi) * 100, digits = 2)) %>%
+    ungroup() %>%
+    group_by(etiq_provincia_i) %>%
+    dplyr::mutate(
+      perc_provincia = round(n_amphi / sum(n_amphi) * 100, digits = 2)) %>%
+    ungroup() %>%
+    dplyr::mutate_at(
+      vars(starts_with('etiq_')), 
+      ~ as.factor(.)) %>%
+    arrange(etiq_pais_i, desc(n_amphi)),
+  colnames = c(
+    'País' = 'etiq_pais_i',
+    'Província' = 'etiq_provincia_i',
+    'N' = 'n_amphi',
+    '% Total' = 'perc_total', 
+    '% País' = 'perc_pais', 
+    '% Província' = 'perc_provincia'),
+  extensions = 'Buttons',
+  filter = 'top',
+  options = list(
+    pageLength = 10,
+    lengthMenu = c(5, 10, 25, 50, 100),
+    autoWidth = TRUE,
+    scrollX = TRUE,
+    dom = 'Bfrtip',
+    buttons = list(
+      list(extend = 'csv', text = 'CSV'),
+      list(extend = 'excel', text = 'XLSX'),
+      list(extend = 'colvis', text = 'Ocultar Columnes')),
+  caption = 'Nombre i percentatges d\'amfiteatres segons Vàzquez')) %>%
+  formatStyle(
+    columns = c('% Total', '% País', '% Província'),
+    backgroundColor = styleInterval(
+      cuts = seq(0, 100, length.out = 9), 
+      values = colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(10)),
+    backgroundSize = '100% 90%',
+    backgroundRepeat = 'no-repeat',
+    backgroundPosition = 'center')
+```
