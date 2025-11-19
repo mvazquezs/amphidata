@@ -25,8 +25,3 @@ options(
 <!-- badges: start -->
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 <!-- badges: end -->
-
-
-Visualització dels dos dashboards:
-* [1988 Dashboard](projects/00_dashboard/01_golvin_dashboard.html)
-* [2025 Dashboard](projects/00_dashboard/02_vazquez_dashboard.html)
