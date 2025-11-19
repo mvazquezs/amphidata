@@ -27,24 +27,3 @@ options(
 <!-- badges: end -->
 
 
-
-
-## Dashboards
-
-### Golvin Dashboard
-
-El chunk següent renderitza el dashboard de Golvin.
-
-```{r render_golvin, echo=TRUE, eval=FALSE}
-quarto::quarto_render('projects/00_dashboard/01_golvin_dashboard.qmd')
-```
-
-
-### Vàzquez Dashboard
-
-El chunk següent renderitza el dashboard de Vàzquez.
-
-```{r render_vazquez, echo=TRUE, eval=FALSE}
-quarto::quarto_render('projects/00_dashboard/02_vazquez_dashboard.qmd')
-```
-

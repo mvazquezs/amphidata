@@ -27,9 +27,6 @@ options(
 <!-- badges: end -->
 
 
-Fes clic a l'enllaç per veure el dashboard en una nova pestanya:
-[01_golvin_dashboard.html](projects/00_dashboard/01_golvin_dashboard.html){target="_blank"}
-
-
-Fes clic a l'enllaç per veure el dashboard en una nova pestanya:
-[02_vazquez_dashboard.html](projects/00_dashboard/02_vazquez_dashboard.html){target="_blank"}
+Visualització dels dos dashboards:
+* [1988 Dashboard](projects/00_dashboard/01_golvin_dashboard.html)
+* [2025 Dashboard](projects/00_dashboard/02_vazquez_dashboard.html)
