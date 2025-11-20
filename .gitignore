@@ -24,7 +24,11 @@
 
 # Ignore HTML
 /sap_amphidata.html
+/00_dashboard/*.html
 
 # Ignore dashboard files
 /sap_amphidata_files/
+/00_dashboard/01_golvin_dashboard_files/
+/00_dashboard/02_vazquez_dasboard_files/
+
 
