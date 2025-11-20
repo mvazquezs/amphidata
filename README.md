@@ -11,5 +11,5 @@
 
 # Visualització de panells de dades
 
-* Panell de dades de Golvin (1988)
-* Panell de dades de Vàzquez (2025) 
+* Per panell de dades de Golvin (1988)
+* Per panell de dades de Vàzquez (2025) veure [`Dashboard 2025`](https://mvazquezs.github.io/amphidata/projects/00_dashboard/02_vazquez_dashboard.html).
