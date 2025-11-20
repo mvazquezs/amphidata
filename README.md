@@ -9,7 +9,3 @@
 <br />
 <br />
 
-# Visualització de panells de dades
-
-* Per panell de dades de Golvin (1988) veure [Dashboard 1988](projects/00_dashboard/01_golvin_dashboard.html)
-* Per panell de dades de Vàzquez (2025) veure [Dashboard 2025](projects/00_dashboard/02_vazquez_dashboard.html)
