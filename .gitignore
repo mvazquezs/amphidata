@@ -27,6 +27,5 @@
 /sap_amphidata.html
 
 # Ignore dashboard files
-/projects/00_dashboard/01_golvin_dashboard_files/
 /sap_amphidata_files/
 
