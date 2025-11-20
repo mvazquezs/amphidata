@@ -2,13 +2,9 @@
 
 <!-- badges: start -->
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-
-
-
-
 <!-- badges: end -->
 
 # Visualització de panells de dades
 
-* Panell de dades de Golvin (1988) ([veure `Dashboard 1988`]) <https://github.io/mvazquezs/amphidata/blob/main/projects/00_dashboard/01_golvin_dashboard.html>.
-* Panell de dades de Vàzquez (2025) ([veure `Dashboard 2025`]) <https://github.io/mvazquezs/amphidata/blob/main/projects/00_dashboard/01_golvin_dashboard.html>.
+* Panell de dades de Golvin (1988)
+* Panell de dades de Vàzquez (2025) 
