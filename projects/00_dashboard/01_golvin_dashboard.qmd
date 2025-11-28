@@ -1,4 +1,4 @@
---- 
+---
 title: "Amphidata 1988"
 format: 
   dashboard:
@@ -12,6 +12,7 @@ logo: amphi_logo.png
 theme: united
 ---
 
+```{=html}
 <style>
 .dt-button {
   padding: 0.1em 0.4em;
@@ -20,6 +21,7 @@ theme: united
   border-radius: 3px;
 }
 </style>
+```
 
 ```{r, include = FALSE, message = FALSE, echo = FALSE, cache = FALSE}
 library(devtools)
@@ -36,36 +38,17 @@ df_g <- load_dimensions_golvin(
   format_llarg = FALSE,
   etiquetes = TRUE)
 
-
 ```
 
 # Stats
 
 ## Row - Dimensions by Golvin {width = 70%}
+
 ### Column {width = 100%}
+
 ```{r}
 #| label: table-all-golvin
 #| title: Dimensions amfiteatres segons Golvin
-
-# Define colors and cuts for styling
-rampa_color <- colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(20)
-
-cuts_arena <- seq(
-  from = min(df_g[['superficie_arena']], na.rm = TRUE),
-  to = max(df_g[['superficie_arena']], na.rm = TRUE),
-  length.out = 19)
-
-cuts_general <- seq(
-  from = min(df_g[['superficie_general']], na.rm = TRUE),
-  to = max(df_g[['superficie_general']], na.rm = TRUE),
-  length.out = 19)
-
-cuts_aforament <- seq(
-  from = min(df_g[['nombre_places']], na.rm = TRUE),
-  to = max(df_g[['nombre_places']], na.rm = TRUE),
-  length.out = 19)
-
-
 
 DT::datatable(
   df_g %>%
@@ -114,30 +97,9 @@ DT::datatable(
         list(extend = 'excel', text = 'XLSX'),
         list(extend = 'colvis', text = 'Ocultar Columnes')),
     caption = 'Dimensions d\'amfiteatres segons Golvin (1988)')) %>%
-  formatStyle(
-    columns = 'Superfície arena (m2)',
-    backgroundColor = styleInterval(
-      cuts = cuts_arena, 
-      values = rampa_color),
-    backgroundSize = '100% 90%',
-    backgroundRepeat = 'no-repeat',
-    backgroundPosition = 'center') %>%
-  formatStyle(
-    columns = 'Superfície general (m2)',
-    backgroundColor = styleInterval(
-      cuts = cuts_general, 
-      values = rampa_color),
-    backgroundSize = '100% 90%',
-    backgroundRepeat = 'no-repeat',
-    backgroundPosition = 'center') %>%
-  formatStyle(
-    columns = 'Aforament',
-    backgroundColor = styleInterval(
-      cuts = cuts_aforament, 
-      values = rampa_color),
-    backgroundSize = '100% 90%',
-    backgroundRepeat = 'no-repeat',
-     backgroundPosition = 'center')
+  format_dtable(
+    columns = c('Superfície arena (m2)', 'Superfície general (m2)', 'Aforament'),
+    format = 'style')
 ```
 
 # Distribució
@@ -201,6 +163,7 @@ plotly::ggplotly(p_01_golvin, tooltip = 'text')
 ```
 
 ## Column - Nombre amfiteatres segons provincia i país {width = 30%}
+
 ```{r}
 #| label: table-golvin
 #| title: Nombre amfiteatres segons provincia i país
@@ -249,6 +212,8 @@ DT::datatable(
     backgroundColor = styleInterval(
       cuts = seq(0, 100, length.out = 9), 
       values = colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(10)),
+      cuts = estil_percentatge$cuts,
+      values = estil_percentatge$rampa_color),
     backgroundSize = '100% 90%',
     backgroundRepeat = 'no-repeat',
     backgroundPosition = 'center')

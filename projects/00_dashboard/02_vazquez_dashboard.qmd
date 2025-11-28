@@ -1,4 +1,4 @@
---- 
+---
 title: "Amphidata 2025"
 format: 
   dashboard:
@@ -12,6 +12,7 @@ logo: amphi_logo.png
 theme: united
 ---
 
+```{=html}
 <style>
 .dt-button {
   padding: 0.1em 0.4em;
@@ -20,6 +21,7 @@ theme: united
   border-radius: 3px;
 }
 </style>
+```
 
 ```{r, include = FALSE, message = FALSE, echo = FALSE, cache = FALSE}
 library(devtools)
@@ -63,13 +65,16 @@ tab_df_v <- tab_summary(
 # Stats
 
 ## Row - Dimensions by Vàzquez {width = 70%}
+
 ### Column {width = 100%}
+
 ```{r, message = FALSE, echo = FALSE}
 #| label: table-all-vazquez
 #| title: Dimensions amfiteatres segons Vázquez
 
 # Define colors and cuts for styling
-rampa_color <- colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(20)
+rampa_color <- colorRampPalette(
+  c('#B0E0E6', 'white', '#E9967A'))(20)
 
 cuts_arena <- seq(
   from = min(tab_df_v[['superficie_arena']], na.rm = TRUE),
@@ -131,7 +136,7 @@ DT::datatable(
         list(extend = 'csv', text = 'CSV'),
         list(extend = 'excel', text = 'XLSX'),
         list(extend = 'colvis', text = 'Ocultar Columnes')),
-    caption = 'Dimensions d\'amfiteatres segons Golvin (1988)')) %>%
+    caption = 'Dimensions d\'amfiteatres segons Vàzquez (2025)')) %>%
   formatStyle(
     columns = 'Superfície arena (m2)',
     backgroundColor = styleInterval(
@@ -220,6 +225,7 @@ plotly::ggplotly(p_01_vazquez, tooltip = 'text')
 ```
 
 ## Column - Nombre amfiteatres segons provincia i país {width = 30%}
+
 ```{r}
 #| label: table-vazquez
 #| title: Nombre amfiteatres segons provincia i país
@@ -267,7 +273,8 @@ DT::datatable(
     columns = c('% Total', '% País', '% Província'),
     backgroundColor = styleInterval(
       cuts = seq(0, 100, length.out = 9), 
-      values = colorRampPalette(c('#B0E0E6', 'white', '#E9967A'))(10)),
+      values = colorRampPalette(
+        c('#B0E0E6', 'white', '#E9967A'))(10)),
     backgroundSize = '100% 90%',
     backgroundRepeat = 'no-repeat',
     backgroundPosition = 'center')
