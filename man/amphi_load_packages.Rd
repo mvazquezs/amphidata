@@ -2,26 +2,18 @@
 % Please edit documentation in R/00_setup.R
 \name{amphi_load_packages}
 \alias{amphi_load_packages}
-\title{Carrega i instal·la els paquets necessaris}
+\title{Load and install essential dependencies for 'salutUNEDstats'}
 \usage{
 amphi_load_packages(update_packages = FALSE)
 }
 \arguments{
-\item{update_packages}{Lògic. Si és \code{TRUE}, intenta actualitzar tots els paquets a la seva darrera versió. Per defecte és \code{FALSE}.}
+\item{update_packages}{Logical. If \code{TRUE}, it attempts to update all packages
+to their latest version. Defaults to \code{FALSE}.}
 }
 \value{
-No retorna cap valor, però carrega els paquets a l'entorn global.
+No return value, but loads the packages into the global environment.
 }
 \description{
-Aquesta funció utilitza el paquet 'pacman' per comprovar, instal·lar (si cal) i carregar totes les dependències de R per a l'anàlisi. També configura algunes opcions globals de la sessió, com evitar la creació de fitxers .RData i .Rhistory.
-}
-\examples{
-# Carregar tots els paquets necessaris
-# amphi_load_packages()
-
-# Carregar i forçar l'actualització
-# amphi_load_packages(update_packages = TRUE)
-}
-\seealso{
-\code{\link[pacman]{p_load}}
+This function uses the 'pacman' package to check, install (if necessary),
+and load the key dependencies of the 'salutUNEDstats' package for solving the exercises.
 }
